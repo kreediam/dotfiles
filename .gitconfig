@@ -1,6 +1,6 @@
 [user]
-	name = 
-	email = 
+	name = Kevin Reed
+	email = kreed@springthrough.com
 [push]
 	default = simple
 [core]
@@ -9,26 +9,34 @@
 [difftool "sourcetree"]
 	cmd = 'C:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe' \"$LOCAL\" \"$REMOTE\"
 [alias]
-	ec = config --global -e
-	ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-	la = "!git config -l | grep alias | cut -c 7-"
-	ci = commit
-	cm = commit -m
-	co = checkout
-	cob = checkout -b
-	st = status
-	dui = commit -m 'Update deployment project to include latest built files'
-	branch-name = "!git rev-parse --abbrev-ref HEAD"
-	publish = "!git push -u origin $(git branch-name)"
-	up = "!f() { git fetch && git checkout ${1-dev} && git pull ; }; f"	
-	rb = "!f() { git rebase -i HEAD~$1; }; f"
-	uprb = "!f() { git up && git co $1 && git rebase ${2-dev} ; }; f"
-	cl = "!f() { git co ${1-dev} && git branch --merged ${1-dev} | egrep -v 'dev|release|master' | xargs -r git branch -d ; }; f"
-	done = "!f() { git up ${1-dev} && git cl ${1-dev} ; }; f"
-	release = "!f() { git up dev && git up release && git merge dev ; }; f"
-	tag-major = "!f() { git describe | awk -F'[.-]' '{print $1+1 \".\" 0 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
-	tag-minor = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2+1 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
-	tag-bug = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2 \".\" $3+1}' | xargs -r git tag -a -m \"\" ; }; f"
+    edit-config = config --global -e
+    ci = commit
+    cm = commit -m
+    co = checkout
+    cob = checkout -b
+    st = status
+    dui = commit -m 'Update deployment project to include latest grunt built files'
+
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    la = "!git config -l | grep alias | cut -c 7-"
+
+    branch-name = "!git rev-parse --abbrev-ref HEAD"
+    last = "!git rev-parse HEAD"
+
+    up = "!f() { git fetch && git checkout ${1-dev} && git pull ; }; f"	
+    rb = "!f() { git rebase -i HEAD~$1; }; f"
+    uprb = "!f() { branch=`git branch-name`; git up ${1-dev} && git co $branch && git rebase ${1-dev} ; }; f"
+
+    publish = "!git push -u origin $(git branch-name)"	
+    cl = "!f() { git co ${1-dev} && git branch --merged ${1-dev} | egrep -v 'dev|release|master' | xargs -r git branch -d ; }; f"
+    done = "!f() { git up ${1-dev} && git cl ${1-dev} ; }; f"
+
+    release = "!f() { git up dev && git up release && git merge dev ; }; f"
+
+    tag-major = "!f() { git describe | awk -F'[.-]' '{print $1+1 \".\" 0 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
+    tag-minor = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2+1 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
+    tag-bug = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2 \".\" $3+1}' | xargs -r git tag -a -m \"\" ; }; f"
+    
 [credential]
 	helper = manager
 [mergetool "sourcetree"]
