@@ -23,7 +23,7 @@
     branch-name = "!git rev-parse --abbrev-ref HEAD"
     last = "!git rev-parse HEAD"
 
-    up = "!f() { git fetch && git checkout ${1-dev} && git pull ; }; f"	
+    up = "!f() { git fetch --prune --tags origin && git checkout ${1-dev} && git pull ; }; f"	
     rb = "!f() { git rebase -i HEAD~$1; }; f"
     uprb = "!f() { branch=`git branch-name`; git up ${1-dev} && git co $branch && git rebase ${1-dev} ; }; f"
 
