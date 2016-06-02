@@ -21,10 +21,11 @@
     la = "!git config -l | grep alias | cut -c 7-"
 
     branch-name = "!git rev-parse --abbrev-ref HEAD"
-    last = "!git rev-parse HEAD"
+    last-commit = "!git rev-parse HEAD"
 
+    cf = "!git commit --fixup=$(git last-commit)"
     up = "!f() { git fetch --prune --tags origin && git checkout ${1-dev} && git pull ; }; f"	
-    rb = "!f() { git rebase -i HEAD~$1; }; f"
+    rb = "!f() { git rebase --interactive --autosquash HEAD~$1; }; f"
     uprb = "!f() { branch=`git branch-name`; git up ${1-dev} && git co $branch && git rebase ${1-dev} ; }; f"
 
     publish = "!git push -u origin $(git branch-name)"	
@@ -36,7 +37,6 @@
     tag-major = "!f() { git describe | awk -F'[.-]' '{print $1+1 \".\" 0 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
     tag-minor = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2+1 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
     tag-bug = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2 \".\" $3+1}' | xargs -r git tag -a -m \"\" ; }; f"
-    
 [credential]
 	helper = manager
 [mergetool "sourcetree"]
