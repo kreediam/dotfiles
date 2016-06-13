@@ -37,6 +37,9 @@
     tag-major = "!f() { git describe | awk -F'[.-]' '{print $1+1 \".\" 0 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
     tag-minor = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2+1 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
     tag-bug = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2 \".\" $3+1}' | xargs -r git tag -a -m \"\" ; }; f"
+    
+    # mv-tag old new
+    mv-tag = "!f() { git tag $2 $1 && git tag -d $1 && git push origin :refs/tags/$1 && git push --tags ; }; f"
 [credential]
 	helper = manager
 [mergetool "sourcetree"]
