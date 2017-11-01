@@ -5,9 +5,7 @@
 	default = simple
 [core]
 	autocrlf = true
-[credential]
-[difftool "sourcetree"]
-	cmd = 'C:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe' \"$LOCAL\" \"$REMOTE\"
+	excludesfile = C:\\Users\\kevinr\\Documents\\gitignore_global.txt
 [alias]
     edit-config = config --global -e
     ci = commit
@@ -15,33 +13,78 @@
     co = checkout
     cob = checkout -b
     st = status
+    mc = merge --no-ff
+
+    # Create a new commit with the message Update deployment project ...
     dui = commit -m 'Update deployment project to include latest grunt built files'
 
+    # Print the log in a pretty format.
     ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+
+    # Print a list of aliases.
     la = "!git config -l | grep alias | cut -c 7-"
 
+    # Print the current branch name.
     branch-name = "!git rev-parse --abbrev-ref HEAD"
+
+    # Print the hash of the commit that you're on.
     last-commit = "!git rev-parse HEAD"
 
+    # Create a 'fix-up' commit for the commit that you're on. Useful for autosquashing.
+    # Example: $> git cf
     cf = "!git commit --fixup=$(git last-commit)"
+
+    # Switch to a branch and get the latest changes. Will use 'dev' if no branch name is supplied.
+    # $> git up feat/foo
     up = "!f() { git fetch --prune --tags origin && git checkout ${1-dev} && git pull ; }; f"	
+
+    # Start an interactive rebase on the previous x commits. NOTE: Don't rebase published commits.
+    # $> git rb 4
     rb = "!f() { git rebase --interactive --autosquash HEAD~$1; }; f"
+
+    # Switch to a branch, get the latest changes, and rebase my work on top of that.
+    # $> git uprb
     uprb = "!f() { branch=`git branch-name`; git up ${1-dev} && git co $branch && git rebase ${1-dev} ; }; f"
 
-    publish = "!git push -u origin $(git branch-name)"	
+    # Push a local branch to origin, setting the upstream branch to the same name for tracking purposes.
+    # $> git publish
+    publish = "!git push -u origin $(git branch-name)"
+
+    # Switch to a branch and delete all of the local branches that have been merged in to this branch excluding dev, release, and master
+    # $> git cl
     cl = "!f() { git co ${1-dev} && git branch --merged ${1-dev} | egrep -v 'dev|release|master' | xargs -r git branch -d ; }; f"
+
+    # Get the latest changes for a branch and delete local branches that have been merged in to this branch excluding dev, release, and master
+    # $> git done
     done = "!f() { git up ${1-dev} && git cl ${1-dev} ; }; f"
 
+    # Merge the latest dev branch into the latest release branch
+    # $> git release
     release = "!f() { git up dev && git up release && git merge dev ; }; f"
 
+    # Get the latest version number tag, and make a new tag with the next major version number. ie: 1.3.7 => 2.0.0
+    # $> git tag-major
     tag-major = "!f() { git describe | awk -F'[.-]' '{print $1+1 \".\" 0 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
+
+    # Get the latest version number tag, and make a new tag with the next minor version number. ie: 1.3.7 => 1.4.0
+    # $> git tag-minor
     tag-minor = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2+1 \".\" 0}' | xargs -r git tag -a -m \"\" ; }; f"
+
+    # Get the latest version number tag, and make a new tag with the next bug version number. ie: 1.3.7 => 1.3.8
+    # $> git tag-bug
     tag-bug = "!f() { git describe | awk -F'[.-]' '{print $1 \".\" $2 \".\" $3+1}' | xargs -r git tag -a -m \"\" ; }; f"
-    
-    # mv-tag old new
+
+    # Rename tag X to Y, both locally and on origin
+		# $> git mv-tag old new
     mv-tag = "!f() { git tag $2 $1 && git tag -d $1 && git push origin :refs/tags/$1 && git push --tags ; }; f"
+    
+    dry-run = "!git merge --no-commit --no-ff $1"
+    apg = "!f() { git add . && git cm 'Project notes' ; }; f"
+
 [credential]
 	helper = manager
+[difftool "sourcetree"]
+	cmd = 'C:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe' \"$LOCAL\" \"$REMOTE\"
 [mergetool "sourcetree"]
 	cmd = 'C:/Program Files/TortoiseSVN/bin/TortoiseMerge.exe'  -base:\"$BASE\" -mine:\"$LOCAL\" -theirs:\"$REMOTE\" -merged:\"$MERGED\"
 	trustExitCode = true
